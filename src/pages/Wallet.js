@@ -4,7 +4,7 @@ class Wallet extends React.Component {
   render() {
     return (
       <header>
-        <p data-testid="email-field"> { }</p>
+        <p data-testid="email-field"> </p>
       </header>
     );
   }
