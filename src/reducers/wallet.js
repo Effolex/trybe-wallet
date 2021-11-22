@@ -5,10 +5,14 @@ const INITIAL_STATE = {
   currencyToExchange: 'BRL',
   expenses: [],
   lastExpense: 0,
+  editor: false,
+  idToEdit: 0,
 };
 
 function wallet(state = INITIAL_STATE, action) {
   let lastExpense = 0;
+  const { expenses } = state;
+  let newExpenses = [];
   switch (action.type) {
   case '@WALLET/SAVECURRENCIES':
     return { ...state,
@@ -23,6 +27,17 @@ function wallet(state = INITIAL_STATE, action) {
   case '@WALLET/REMOVEEXPENSES':
     return { ...state,
       expenses: [...state.expenses.filter((exp) => exp.id !== action.state)] };
+  case '@WALLET/ACTIVATEEDITED':
+    console.log(action.state);
+    return { ...state, ...action.state };
+  case '@WALLET/SAVEEDITING':
+    newExpenses = expenses.map((expense) => {
+      if (expense.id === state.idToEdit) {
+        return { ...expense, ...action.state, id: state.idToEdit };
+      }
+      return expense;
+    });
+    return { ...state, editor: false, expenses: [...newExpenses] };
   default:
     return state;
   }

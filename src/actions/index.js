@@ -4,6 +4,10 @@ const saveUser = (state) => ({ type: '@USER/SAVE', state });
 const saveWalletCurrencies = (state) => ({ type: '@WALLET/SAVECURRENCIES', state });
 const saveWalletExpenses = (state) => ({ type: '@WALLET/SAVEEXPENSES', state });
 const removeExpense = (state) => ({ type: '@WALLET/REMOVEEXPENSES', state });
+const activateEditing = (id) => ({ type: '@WALLET/ACTIVATEEDITED',
+  state: { editor: true, idToEdit: id } });
+const saveEditing = (state) => ({ type: '@WALLET/SAVEEDITING',
+  state });
 
 function fetchCurrencies() {
   return async (dispatch) => {
@@ -14,6 +18,13 @@ function fetchCurrencies() {
   };
 }
 
-const actions = { saveUser, saveWalletExpenses, fetchCurrencies, removeExpense };
+const actions = {
+  saveUser,
+  saveWalletExpenses,
+  fetchCurrencies,
+  removeExpense,
+  activateEditing,
+  saveEditing,
+};
 
 export default actions;

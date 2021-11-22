@@ -43,13 +43,17 @@ class Wallet extends React.Component {
 
   async saveExpense() {
     const { expenses } = this.state;
-    const { sendExpenses, lastPos } = this.props;
-    const currencies = await this.fetchcurrencyInfo();
+    const { sendExpenses, lastPos, editor, edit } = this.props;
     let newExpenses = { ...expenses };
-    newExpenses.exchangeRates = currencies;
-    newExpenses.id = lastPos;
     newExpenses = { ...newExpenses };
     console.log(newExpenses);
+    if (editor) {
+      edit(newExpenses);
+      return;
+    }
+    const currencies = await this.fetchcurrencyInfo();
+    newExpenses.exchangeRates = currencies;
+    newExpenses.id = lastPos;
     sendExpenses(newExpenses);
     expenses.value = '';
     expenses.description = '';
@@ -84,7 +88,7 @@ class Wallet extends React.Component {
 
   renderForms() {
     const { expenses: { value, description, currency, method, tag } } = this.state;
-    const { currencies } = this.props;
+    const { currencies, editor } = this.props;
     return (
       <form>
         {this.formsDivided(value, description)}
@@ -121,7 +125,7 @@ class Wallet extends React.Component {
         </select>
 
         <button type="button" onClick={ this.saveExpense }>
-          Adicionar despesa
+          { (editor) ? 'Editar despesa' : 'Adicionar despesa'}
         </button>
       </form>);
   }
@@ -157,11 +161,14 @@ const mapStateToProps = (store) => ({
   currencies: store.wallet.currencies,
   expensesProps: store.wallet.expenses,
   lastPos: store.wallet.lastExpense,
+  editor: store.wallet.editor,
+  idToEdit: store.wallet.idToEdit,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   sendExpenses: (state) => dispatch(actions.saveWalletExpenses(state)),
   getCurrency: () => dispatch(actions.fetchCurrencies()),
+  edit: (state) => dispatch(actions.saveEditing(state)),
 });
 
 Wallet.propTypes = {
@@ -171,6 +178,8 @@ Wallet.propTypes = {
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
   lastPos: PropTypes.number.isRequired,
   expensesProps: PropTypes.arrayOf(PropTypes.object).isRequired,
+  editor: PropTypes.func.isRequired,
+  edit: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

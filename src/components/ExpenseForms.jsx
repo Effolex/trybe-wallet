@@ -12,7 +12,7 @@ class ExpenseForms extends React.Component {
 
   expenseFormated(expense) {
     const { currency, exchangeRates, id } = expense;
-    const { changeExpense } = this.props;
+    const { changeExpense, activateEd } = this.props;
     return (
       <tr key={ expense.id }>
         <td>{expense.description}</td>
@@ -21,9 +21,19 @@ class ExpenseForms extends React.Component {
         <td>{expense.value}</td>
         <td>{exchangeRates[currency].name.replace('/Real Brasileiro', '')}</td>
         <td>{parseFloat(exchangeRates[currency].ask).toFixed(2)}</td>
-        <td>{parseFloat(exchangeRates[currency].ask * expense.value).toFixed(2)}</td>
+        <td>
+          {parseFloat(exchangeRates[currency].ask * parseFloat(expense.value)).toFixed(2)}
+        </td>
         <td>Real</td>
         <td>
+          <button
+            type="button"
+            data-testid="edit-btn"
+            onClick={ () => { activateEd(id); } }
+          >
+            Editar
+          </button>
+
           <button
             type="button"
             data-testid="delete-btn"
@@ -64,11 +74,13 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   changeExpense: (state) => dispatch(actions.removeExpense(state)),
+  activateEd: (state) => dispatch(actions.activateEditing(state)),
 });
 
 ExpenseForms.propTypes = {
   changeExpense: PropTypes.func.isRequired,
   expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
+  activateEd: PropTypes.func.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExpenseForms);
