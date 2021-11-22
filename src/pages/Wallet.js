@@ -42,8 +42,8 @@ class Wallet extends React.Component {
   }
 
   async saveExpense() {
-    let { expenses } = this.state;
-    const { sendExpenses, expensesProps, lastPos } = this.props;
+    const { expenses } = this.state;
+    const { sendExpenses, lastPos } = this.props;
     const currencies = await this.fetchcurrencyInfo();
     let newExpenses = { ...expenses };
     newExpenses.exchangeRates = currencies;
@@ -80,7 +80,6 @@ class Wallet extends React.Component {
         />
       </>
     );
-
   }
 
   renderForms() {
@@ -167,6 +166,11 @@ const mapDispatchToProps = (dispatch) => ({
 
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
+  sendExpenses: PropTypes.func.isRequired,
+  getCurrency: PropTypes.func.isRequired,
+  currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
+  lastPos: PropTypes.number.isRequired,
+  expensesProps: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

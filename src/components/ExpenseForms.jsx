@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import actions from '../actions';
 
@@ -13,7 +14,7 @@ class ExpenseForms extends React.Component {
     const { currency, exchangeRates, id } = expense;
     const { changeExpense } = this.props;
     return (
-      <tr key={ expense.key }>
+      <tr key={ expense.id }>
         <td>{expense.description}</td>
         <td>{expense.tag}</td>
         <td>{expense.method}</td>
@@ -26,7 +27,7 @@ class ExpenseForms extends React.Component {
           <button
             type="button"
             data-testid="delete-btn"
-            onClick={ async () => { await changeExpense(id); } }
+            onClick={ () => { changeExpense(id); } }
           >
             Excluir
           </button>
@@ -38,7 +39,8 @@ class ExpenseForms extends React.Component {
   render() {
     const { expenses } = this.props;
     const table = ['Descrição', 'Tag', 'Método de pagamento', 'Valor',
-      'Moeda', 'Câmbio utilizado', 'Valor convertido', 'Moeda de conversão', 'Editar/Excluir'];
+      'Moeda', 'Câmbio utilizado', 'Valor convertido',
+      'Moeda de conversão', 'Editar/Excluir'];
     return (
       <table>
         <thead>
@@ -52,7 +54,6 @@ class ExpenseForms extends React.Component {
       </table>
     );
   }
-
 }
 
 const mapStateToProps = (store) => ({
@@ -64,5 +65,10 @@ const mapStateToProps = (store) => ({
 const mapDispatchToProps = (dispatch) => ({
   changeExpense: (state) => dispatch(actions.removeExpense(state)),
 });
+
+ExpenseForms.propTypes = {
+  changeExpense: PropTypes.func.isRequired,
+  expenses: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExpenseForms);
