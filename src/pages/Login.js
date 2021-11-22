@@ -37,9 +37,10 @@ class Login extends React.Component {
   }
 
   sendUser() {
-    const { saveUser } = this.props;
+    const { saveUser, getCurrency } = this.props;
     const { email, password } = this.state;
     saveUser({ email, password });
+    getCurrency();
   }
 
   render() {
@@ -73,10 +74,13 @@ class Login extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  saveUser: (state) => dispatch(actions.saveUser(state)) });
+  saveUser: (state) => dispatch(actions.saveUser(state)),
+  getCurrency: () => dispatch(actions.fetchCurrencies()),
+});
 
 Login.propTypes = {
   saveUser: PropTypes.func.isRequired,
+  getCurrency: PropTypes.func.isRequired,
 };
 
 // Podemos utilizar o mapDispatchToProps de outra forma também! Lembra do arquivo que foi criado contendo a função "newAction?
